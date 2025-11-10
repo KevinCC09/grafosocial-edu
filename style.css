@@ -1,0 +1,98 @@
+/* style.css */
+
+/* Estilos generales del cuerpo de la página */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px; /* Aumenta el padding general */
+    background-color: #f5f7fa; /* Color de fondo más suave */
+    color: #333; /* Color de texto principal */
+}
+
+/* Estilo del encabezado */
+h1 {
+    text-align: center;
+    color: #2c3e50; /* Color de encabezado más oscuro */
+    margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+/* Contenedor del grafo */
+#cy {
+    width: 70%;
+    height: 70vh; /* Altura del 70% de la ventana */
+    border: 2px solid #bdc3c7; /* Borde más definido */
+    border-radius: 8px; /* Bordes ligeramente redondeados */
+    float: left;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sutil sombra */
+}
+
+/* Panel de controles */
+#controls {
+    width: calc(25% - 20px); /* Ajuste para compensar el padding del body */
+    float: right;
+    padding: 20px; /* Aumenta el padding interno */
+    background-color: #ecf0f1; /* Color de fondo del panel */
+    border: 2px solid #bdc3c7; /* Borde consistente */
+    border-radius: 8px; /* Bordes redondeados */
+    height: 70vh;
+    overflow-y: auto; /* Permitir desplazamiento si el contenido es muy largo */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sutil sombra */
+}
+
+/* Estilo de los botones */
+#controls button {
+    display: block;
+    width: 100%;
+    padding: 12px; /* Aumenta el padding del botón */
+    margin-bottom: 12px; /* Aumenta el espacio entre botones */
+    cursor: pointer;
+    background-color: #3498db; /* Color de fondo del botón */
+    color: white; /* Color del texto del botón */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes ligeramente redondeados */
+    font-size: 16px; /* Tamaño de fuente más grande */
+    transition: background-color 0.3s ease; /* Transición suave al pasar el mouse */
+}
+
+/* Efecto hover en los botones */
+#controls button:hover {
+    background-color: #2980b9; /* Color de fondo al pasar el mouse */
+}
+
+/* Panel de información */
+#info {
+    margin-top: 20px; /* Aumenta el espacio superior */
+    padding: 15px; /* Aumenta el padding */
+    background-color: white; /* Fondo blanco para el panel de info */
+    border: 1px solid #ccc; /* Borde */
+    border-radius: 5px; /* Bordes redondeados */
+    max-height: calc(40vh - 50px); /* Limitar la altura considerando el padding */
+    overflow-y: auto; /* Permitir desplazamiento si es necesario */
+    font-size: 14px; /* Tamaño de fuente consistente */
+}
+
+/* Estilo para cada bloque de información de nodo */
+.node-info {
+    margin-bottom: 8px; /* Espacio entre bloques */
+    padding: 8px; /* Relleno interno */
+    background-color: #f8f9fa; /* Color de fondo suave */
+    border-left: 4px solid #3498db; /* Línea lateral de color */
+    border-radius: 3px; /* Bordes ligeramente redondeados */
+}
+
+/* Estilo para el texto en negrita dentro de node-info */
+.node-info strong {
+    color: #2c3e50; /* Color de texto en negrita */
+}
+
+/* Limpia el float para que otros elementos no se vean afectados */
+.clear {
+    clear: both;
+}
+
+/* Estilo para el encabezado dentro del panel de info */
+#info h4 {
+    margin-top: 0; /* Elimina el margen superior del h4 */
+    color: #2c3e50; /* Color consistente */
+}
