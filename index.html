@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrafoSocial Edu</title>
+    <!-- Incluye la librería Cytoscape.js -->
+    <script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: #f0f2f5;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        #cy {
+            width: 70%;
+            height: 70vh; /* Altura del 70% de la ventana */
+            border: 1px solid #ccc;
+            float: left;
+            background-color: white;
+        }
+        #controls {
+            width: 25%;
+            float: right;
+            padding: 15px;
+            background-color: #e9ecef;
+            border: 1px solid #ccc;
+            height: 70vh;
+            overflow-y: auto;
+        }
+        #controls button {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        #info {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            max-height: 40vh; /* Limitar la altura del panel de info */
+            overflow-y: auto;
+        }
+        .node-info {
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f8f9fa;
+            border-left: 3px solid #007bff;
+        }
+        .node-info strong {
+            color: #0056b3;
+        }
+        .clear {
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>GrafoSocial Edu</h1>
+
+    <!-- Contenedor del grafo -->
+    <div id="cy"></div>
+
+    <!-- Panel de controles -->
+    <div id="controls">
+        <h3>Controles</h3>
+        <button onclick="addNode()">Agregar Usuario</button>
+        <button onclick="startEdgeCreation()">Conectar Usuarios (Clic Nodo 1, luego Nodo 2)</button>
+        <button onclick="calculateDegrees()">Calcular Grados</button>
+        <button onclick="loadExample()">Cargar Ejemplo</button>
+        <button onclick="resetGraph()">Reiniciar Red</button>
+
+        <div id="info">
+            <p><em>Interactúa con la red usando los botones. Los resultados aparecerán aquí.</em></p>
+        </div>
+    </div>
+
+    <div class="clear"></div> <!-- Limpia el float -->
+
+    <script>
+        // Inicializa Cytoscape
+        let cy = cytoscape({
+            container: document.getElementById('cy'), // ID del contenedor
+            elements: [], // Elementos iniciales (vacío)
+            style: [ // Estilo básico
+                {
+                    selector: 'node',
+                    style: {
+                        'background-color': '#6FB1FC',
+                        'label': 'data(id)', // Mostrar el ID del nodo como etiqueta
+                        'text-valign': 'center',
+                        'text-halign': 'center',
+                        'color': 'black',
+                        'font-size': '14px',
+                        'width': '30px',
+                        'height': '30px'
+                    }
+                },
+                {
+                    selector: 'edge',
+                    style: {
+                        'width': 2,
+                        'line-color': '#ccc',
+                        'target-arrow-color': '#ccc',
+                        'target-arrow-shape': 'triangle',
+                        'curve-style': 'bezier' // Líneas curvas para mejor visualización
+                    }
+                }
+            ],
+            layout: { name: 'cose', animate: true, fit: true } // Layout inicial
+        });
+
+        let nodeIdCounter = 1; // Contador para IDs únicos de nodos
+        let isConnectingMode = false; // Bandera para modo de conexión
+        let sourceNodeForEdge = null; // Nodo origen para crear arista
+
+        // Función para agregar un nuevo nodo
+        function addNode() {
+            let newNodeId = 'u' + nodeIdCounter;
+            cy.add({
+                group: 'nodes',
+                data: { id: newNodeId }
+            });
+            nodeIdCounter++;
+            updateInfo("Nodo agregado: " + newNodeId);
+        }
+
+        // Función para iniciar el modo de creación de aristas
+        function startEdgeCreation() {
+            isConnectingMode = true;
+            sourceNodeForEdge = null;
+            updateInfo("Modo Conexión activado. Clickea en un nodo para seleccionarlo como origen.");
+        }
+
+        // Función para manejar la selección de nodos en modo conexión
+        cy.on('tap', 'node', function(evt){
+            if (!isConnectingMode) return; // Ignorar si no está en modo conexión
+
+            let tappedNode = evt.target;
+
+            if (sourceNodeForEdge === null) {
+                // Primer clic: seleccionar nodo origen
+                sourceNodeForEdge = tappedNode;
+                updateInfo("Nodo origen seleccionado: " + sourceNodeForEdge.id() + ". Ahora clickea en el nodo destino.");
+            } else {
+                // Segundo clic: crear arista entre origen y destino
+                let targetNodeId = tappedNode.id();
+                let sourceNodeId = sourceNodeForEdge.id();
+
+                // Evitar bucles (nodo a sí mismo) y aristas duplicadas
+                if (sourceNodeId !== targetNodeId && !cy.$id(sourceNodeId).connectedEdges().some(edge => edge.target().id() === targetNodeId || edge.source().id() === targetNodeId)) {
+                    cy.add({
+                        group: 'edges',
+                        data: { id: 'e_' + sourceNodeId + '_' + targetNodeId, source: sourceNodeId, target: targetNodeId }
+                    });
+                    updateInfo("Arista creada entre " + sourceNodeId + " y " + targetNodeId);
+                } else {
+                    if (sourceNodeId === targetNodeId) {
+                        updateInfo("No se pueden crear aristas de un nodo a sí mismo.");
+                    } else {
+                        updateInfo("La arista entre " + sourceNodeId + " y " + targetNodeId + " ya existe.");
+                    }
+                }
+                // Reiniciar para la próxima conexión
+                sourceNodeForEdge = null;
+                isConnectingMode = false;
+            }
+        });
+
+        // Función para calcular y mostrar el grado de cada nodo
+        function calculateDegrees() {
+            let degreeInfo = "<h4>Grados de los nodos:</h4>";
+            cy.nodes().forEach(function(node) {
+                let degree = node.degree(); // Grado total (entrante + saliente, aunque aquí son no dirigidas conceptualmente)
+                degreeInfo += `<div class="node-info">Nodo <strong>${node.id()}</strong> tiene grado: <strong>${degree}</strong></div>`;
+            });
+            updateInfo(degreeInfo);
+        }
+
+        // Función para cargar un grafo de ejemplo
+        function loadExample() {
+            resetGraph(); // Limpia la red actual
+            // Añade nodos del ejemplo
+            let exampleNodes = ['A', 'B', 'C', 'D', 'E', 'F'];
+            exampleNodes.forEach(id => {
+                cy.add({ group: 'nodes', data: { id: id } });
+            });
+
+            // Añade aristas del ejemplo: (A,B), (A,C), (B,C), (B,D), (C,D), (D,E), (E,F)
+            let exampleEdges = [
+                ['A', 'B'], ['A', 'C'], ['B', 'C'], ['B', 'D'],
+                ['C', 'D'], ['D', 'E'], ['E', 'F']
+            ];
+            exampleEdges.forEach(edgeIds => {
+                 cy.add({
+                    group: 'edges',
+                    data: { id: 'e_' + edgeIds[0] + '_' + edgeIds[1], source: edgeIds[0], target: edgeIds[1] }
+                });
+            });
+
+            nodeIdCounter = exampleNodes.length + 1; // Actualiza el contador de ID
+            cy.layout({ name: 'cose', animate: true, fit: true }).run(); // Aplica layout
+            updateInfo("Ejemplo de red cargado. Puedes calcular grados o conectar más nodos.");
+        }
+
+        // Función para reiniciar el grafo
+        function resetGraph() {
+            cy.elements().remove(); // Elimina todos los nodos y aristas
+            nodeIdCounter = 1; // Reinicia el contador
+            isConnectingMode = false; // Reinicia el modo de conexión
+            sourceNodeForEdge = null;
+            updateInfo("La red ha sido reiniciada.");
+        }
+
+        // Función para actualizar el panel de información
+        function updateInfo(message) {
+            document.getElementById('info').innerHTML = message;
+        }
+
+        // Mensaje de bienvenida
+        updateInfo("Bienvenido a GrafoSocial Edu. Usa los botones para interactuar con la red.");
+    </script>
+
+</body>
+</html>
