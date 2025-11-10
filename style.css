@@ -77,7 +77,7 @@ h1 {
     margin-bottom: 8px; /* Espacio entre bloques */
     padding: 8px; /* Relleno interno */
     background-color: #f8f9fa; /* Color de fondo suave */
-    border-left: 4px solid #db3434; /* Línea lateral de color */
+    border-left: 4px solid #3498db; /* Línea lateral de color */
     border-radius: 3px; /* Bordes ligeramente redondeados */
 }
 
