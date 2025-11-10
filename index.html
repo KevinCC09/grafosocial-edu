@@ -6,62 +6,8 @@
     <title>GrafoSocial Edu</title>
     <!-- Incluye la librería Cytoscape.js -->
     <script src="https://unpkg.com/cytoscape@3.28.1/dist/cytoscape.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 10px;
-            background-color: #f0f2f5;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        #cy {
-            width: 70%;
-            height: 70vh; /* Altura del 70% de la ventana */
-            border: 1px solid #ccc;
-            float: left;
-            background-color: white;
-        }
-        #controls {
-            width: 25%;
-            float: right;
-            padding: 15px;
-            background-color: #e9ecef;
-            border: 1px solid #ccc;
-            height: 70vh;
-            overflow-y: auto;
-        }
-        #controls button {
-            display: block;
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
-        #info {
-            margin-top: 15px;
-            padding: 10px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            max-height: 40vh; /* Limitar la altura del panel de info */
-            overflow-y: auto;
-        }
-        .node-info {
-            margin-bottom: 5px;
-            padding: 5px;
-            background-color: #f8f9fa;
-            border-left: 3px solid #007bff;
-        }
-        .node-info strong {
-            color: #0056b3;
-        }
-        .clear {
-            clear: both;
-        }
-    </style>
+    <!-- Enlaza el archivo CSS -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -78,6 +24,8 @@
         <button onclick="calculateDegrees()">Calcular Grados</button>
         <button onclick="loadExample()">Cargar Ejemplo</button>
         <button onclick="resetGraph()">Reiniciar Red</button>
+        <!-- Botón para la encuesta -->
+        <button onclick="openSurvey()">Evalúa la Aplicación</button>
 
         <div id="info">
             <p><em>Interactúa con la red usando los botones. Los resultados aparecerán aquí.</em></p>
@@ -128,7 +76,7 @@
             let newNodeId = 'u' + nodeIdCounter;
             cy.add({
                 group: 'nodes',
-                data: { id: newNodeId }
+                 { id: newNodeId }
             });
             nodeIdCounter++;
             updateInfo("Nodo agregado: " + newNodeId);
@@ -160,7 +108,7 @@
                 if (sourceNodeId !== targetNodeId && !cy.$id(sourceNodeId).connectedEdges().some(edge => edge.target().id() === targetNodeId || edge.source().id() === targetNodeId)) {
                     cy.add({
                         group: 'edges',
-                        data: { id: 'e_' + sourceNodeId + '_' + targetNodeId, source: sourceNodeId, target: targetNodeId }
+                         { id: 'e_' + sourceNodeId + '_' + targetNodeId, source: sourceNodeId, target: targetNodeId }
                     });
                     updateInfo("Arista creada entre " + sourceNodeId + " y " + targetNodeId);
                 } else {
@@ -192,7 +140,7 @@
             // Añade nodos del ejemplo
             let exampleNodes = ['A', 'B', 'C', 'D', 'E', 'F'];
             exampleNodes.forEach(id => {
-                cy.add({ group: 'nodes', data: { id: id } });
+                cy.add({ group: 'nodes',  { id: id } });
             });
 
             // Añade aristas del ejemplo: (A,B), (A,C), (B,C), (B,D), (C,D), (D,E), (E,F)
@@ -219,6 +167,12 @@
             isConnectingMode = false; // Reinicia el modo de conexión
             sourceNodeForEdge = null;
             updateInfo("La red ha sido reiniciada.");
+        }
+
+        // Función para abrir la encuesta en una nueva pestaña
+        function openSurvey() {
+            // Reemplaza ESTE ENLACE con el de tu formulario de Google Forms
+            window.open('https://docs.google.com/forms/d/e/1FAIpQLSdU3jAto3nADjToHOYQAjrB78j8wNThaowXKdGHI_yT5fr-WA/viewform?usp=dialog', '_blank');
         }
 
         // Función para actualizar el panel de información
