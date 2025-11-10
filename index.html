@@ -76,7 +76,7 @@
             let newNodeId = 'u' + nodeIdCounter;
             cy.add({
                 group: 'nodes',
-                 { id: newNodeId }
+                data: { id: newNodeId }
             });
             nodeIdCounter++;
             updateInfo("Nodo agregado: " + newNodeId);
@@ -105,10 +105,13 @@
                 let sourceNodeId = sourceNodeForEdge.id();
 
                 // Evitar bucles (nodo a sí mismo) y aristas duplicadas
-                if (sourceNodeId !== targetNodeId && !cy.$id(sourceNodeId).connectedEdges().some(edge => edge.target().id() === targetNodeId || edge.source().id() === targetNodeId)) {
+                if (sourceNodeId !== targetNodeId && !cy.$id(sourceNodeId).connectedEdges().some(edge => 
+                    (edge.target().id() === targetNodeId && edge.source().id() === sourceNodeId) 
+                    || (edge.target().id() === sourceNodeId && edge.source().id() === targetNodeId)
+                )) {
                     cy.add({
                         group: 'edges',
-                         { id: 'e_' + sourceNodeId + '_' + targetNodeId, source: sourceNodeId, target: targetNodeId }
+                        data: { id: 'e_' + sourceNodeId + '_' + targetNodeId, source: sourceNodeId, target: targetNodeId }
                     });
                     updateInfo("Arista creada entre " + sourceNodeId + " y " + targetNodeId);
                 } else {
@@ -140,7 +143,7 @@
             // Añade nodos del ejemplo
             let exampleNodes = ['A', 'B', 'C', 'D', 'E', 'F'];
             exampleNodes.forEach(id => {
-                cy.add({ group: 'nodes',  { id: id } });
+                cy.add({ group: 'nodes', data: { id: id } });
             });
 
             // Añade aristas del ejemplo: (A,B), (A,C), (B,C), (B,D), (C,D), (D,E), (E,F)
@@ -149,7 +152,7 @@
                 ['C', 'D'], ['D', 'E'], ['E', 'F']
             ];
             exampleEdges.forEach(edgeIds => {
-                 cy.add({
+                cy.add({
                     group: 'edges',
                     data: { id: 'e_' + edgeIds[0] + '_' + edgeIds[1], source: edgeIds[0], target: edgeIds[1] }
                 });
