@@ -62,7 +62,29 @@
                         'target-arrow-shape': 'triangle',
                         'curve-style': 'bezier' // Líneas curvas para mejor visualización
                     }
+                },
+                // --- Nuevas reglas para resaltado ---
+                {
+                    selector: '.highlighted-node',
+                    style: {
+                        'background-color': '#FFD700', // Dorado
+                        'border-color': '#FF8C00',     // Naranja oscuro
+                        'border-width': 3,
+                        'font-weight': 'bold',
+                        'text-background-color': '#FFD700',
+                        'text-background-opacity': 1,
+                        'color': 'black'
+                    }
+                },
+                {
+                    selector: '.highlighted-edge',
+                    style: {
+                        'line-color': '#FF8C00',       // Naranja oscuro
+                        'target-arrow-color': '#FF8C00',
+                        'width': 4                     // Más gruesa
+                    }
                 }
+                // --- Fin de nuevas reglas ---
             ],
             layout: { name: 'cose', animate: true, fit: true } // Layout inicial
         });
@@ -132,7 +154,8 @@
             let degreeInfo = "<h4>Grados de los nodos:</h4>";
             cy.nodes().forEach(function(node) {
                 let degree = node.degree(); // Grado total (entrante + saliente, aunque aquí son no dirigidas conceptualmente)
-                degreeInfo += `<div class="node-info">Nodo <strong>${node.id()}</strong> tiene grado: <strong>${degree}</strong></div>`;
+                // Cambia innerHTML para incluir un 'div' con un onclick que llama a highlightNode
+                degreeInfo += `<div class="node-info" onclick="highlightNode('${node.id()}')">Nodo <strong>${node.id()}</strong> tiene grado: <strong>${degree}</strong> (Clic para resaltar)</div>`;
             });
             updateInfo(degreeInfo);
         }
@@ -177,6 +200,7 @@
             // Reemplaza ESTE ENLACE con el de tu formulario de Google Forms
             window.open('https://docs.google.com/forms/d/e/1FAIpQLSdU3jAto3nADjToHOYQAjrB78j8wNThaowXKdGHI_yT5fr-WA/viewform?usp=dialog', '_blank');
         }
+
         // Función para resaltar un nodo y sus aristas
         function highlightNode(nodeId) {
             // Deseleccionar cualquier cosa previamente seleccionada
