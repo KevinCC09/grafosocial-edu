@@ -98,7 +98,7 @@
             let newNodeId = 'u' + nodeIdCounter;
             cy.add({
                 group: 'nodes',
-                data: { id: newNodeId }
+                 { id: newNodeId }
             });
             nodeIdCounter++;
             updateInfo("Nodo agregado: " + newNodeId);
@@ -133,7 +133,7 @@
                 )) {
                     cy.add({
                         group: 'edges',
-                        data: { id: 'e_' + sourceNodeId + '_' + targetNodeId, source: sourceNodeId, target: targetNodeId }
+                         { id: 'e_' + sourceNodeId + '_' + targetNodeId, source: sourceNodeId, target: targetNodeId }
                     });
                     updateInfo("Arista creada entre " + sourceNodeId + " y " + targetNodeId);
                 } else {
@@ -177,7 +177,7 @@
             exampleEdges.forEach(edgeIds => {
                 cy.add({
                     group: 'edges',
-                    data: { id: 'e_' + edgeIds[0] + '_' + edgeIds[1], source: edgeIds[0], target: edgeIds[1] }
+                     { id: 'e_' + edgeIds[0] + '_' + edgeIds[1], source: edgeIds[0], target: edgeIds[1] }
                 });
             });
 
@@ -216,8 +216,9 @@
             selectedNode.addClass('highlighted-node');
             connectedEdges.addClass('highlighted-edge');
 
-            
-            });
+            // [OPCIONAL] Si deseas que el resaltado se cancele al hacer clic en otro nodo o en el fondo,
+            // puedes escuchar un clic global aquí y remover las clases.
+            // Por ahora, el resaltado persiste hasta que se selecciona otro nodo.
         }
 
         // Función para actualizar el panel de información
