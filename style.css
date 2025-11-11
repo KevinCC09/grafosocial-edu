@@ -80,6 +80,9 @@ h1 {
     border-left: 4px solid #3498db; /* Línea lateral de color */
     border-radius: 3px; /* Bordes ligeramente redondeados */
 }
+/* Efecto hover en los bloques de nodo */
+.node-info:hover {
+    background-color: #e9ecef; /* Color al pasar el mouse */
 
 /* Estilo para el texto en negrita dentro de node-info */
 .node-info strong {
