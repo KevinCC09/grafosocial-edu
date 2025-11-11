@@ -177,6 +177,27 @@
             // Reemplaza ESTE ENLACE con el de tu formulario de Google Forms
             window.open('https://docs.google.com/forms/d/e/1FAIpQLSdU3jAto3nADjToHOYQAjrB78j8wNThaowXKdGHI_yT5fr-WA/viewform?usp=dialog', '_blank');
         }
+        // Función para resaltar un nodo y sus aristas
+        function highlightNode(nodeId) {
+            // Deseleccionar cualquier cosa previamente seleccionada
+            cy.elements().removeClass('highlighted-node').removeClass('highlighted-edge');
+
+            // Obtener el nodo clickeado
+            let selectedNode = cy.getElementById(nodeId);
+
+            // Obtener las aristas conectadas a ese nodo
+            let connectedEdges = selectedNode.connectedEdges();
+
+            // Añadir clase para resaltar (esto se manejará con CSS)
+            selectedNode.addClass('highlighted-node');
+            connectedEdges.addClass('highlighted-edge');
+
+            // Opcional: Centrar y hacer zoom en el nodo resaltado
+            cy.animate({
+                fit: { eles: selectedNode, padding: 50 },
+                duration: 500
+            });
+        }
 
         // Función para actualizar el panel de información
         function updateInfo(message) {
