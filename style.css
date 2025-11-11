@@ -79,10 +79,14 @@ h1 {
     background-color: #f8f9fa; /* Color de fondo suave */
     border-left: 4px solid #3498db; /* Línea lateral de color */
     border-radius: 3px; /* Bordes ligeramente redondeados */
+    cursor: pointer; /* Cambia el cursor para indicar que es clickeable */
+    transition: background-color 0.2s; /* Transición suave */
 }
+
 /* Efecto hover en los bloques de nodo */
 .node-info:hover {
     background-color: #e9ecef; /* Color al pasar el mouse */
+}
 
 /* Estilo para el texto en negrita dentro de node-info */
 .node-info strong {
